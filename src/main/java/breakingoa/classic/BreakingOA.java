@@ -57,6 +57,48 @@ class EvalSub extends EvalExp implements SubAlg<IEval> {
 	}
 }
 
+// Alternative versions without explicit denotation interfaces
+class AltPrint implements ExpAlg<String> {
+	@Override public String lit(int n) {
+		return Integer.toString(n);
+	}
+	@Override public String add(String lhs, String rhs) {
+		return lhs + " + " + rhs;
+	}
+	@Override public String mul(String lhs, String rhs) {
+		return lhs + " * " + rhs;
+	}
+}
+
+class AltPrintSub extends AltPrint implements SubAlg<String> {
+	@Override
+	public String sub(String lhs, String rhs) {
+		return lhs + " - " + rhs;
+	}
+}
+
+class AltEval implements ExpAlg<Integer> {
+	@Override
+	public Integer lit(int n) {
+		return n;
+	}
+	@Override
+	public Integer add(Integer lhs, Integer rhs) {
+		return lhs + rhs;
+	}
+	@Override
+	public Integer mul(Integer lhs, Integer rhs) {
+		return lhs * rhs;
+	}
+}
+
+class AltEvalSub extends AltEval implements SubAlg<Integer> {
+	@Override
+	public Integer sub(Integer lhs, Integer rhs) {
+		return lhs - rhs;
+	}
+}
+
 public class BreakingOA {
 	public static void main(String[] args) {
 		IEval eExp = makeExp(new EvalExp());
@@ -81,7 +123,20 @@ public class BreakingOA {
 		System.out.println("eExp2.eval = " + eExp2.eval());
 
 		IPrint pExp2 = makeExp(new PrintSub());
-		System.out.println("pExp2.print = " + pExp2.print());		
+		System.out.println("pExp2.print = " + pExp2.print());
+
+		// Just showing the alternative versions
+		Integer eExp3 = makeExp(new AltEval());
+		System.out.println("eExp3 = " + eExp3);
+
+		String pExp3 = makeExp(new AltPrint());
+		System.out.println("pExp3 = " + pExp3);
+
+		Integer eExp4 = makeSubExp(new AltEvalSub());
+		System.out.println("eExp4 = " + eExp4);
+
+		String pExp4 = makeSubExp(new AltPrintSub());
+		System.out.println("pExp4 = " + pExp4);
 	}
 
 	private static <E> E makeExp(ExpAlg<E> e) {
